@@ -9,12 +9,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// CONNECT TO DB
+// CONNECTION TO DB //
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch(err => console.error("❌ MongoDB connection error:", err));
 
-// MODELS
+// MODELS //
 const RestaurantSchema = new mongoose.Schema({
   name: { type: String, required: true }
 });
@@ -27,7 +27,7 @@ const WinnerSchema = new mongoose.Schema({
 const Restaurant = mongoose.model("Restaurant", RestaurantSchema);
 const Winner = mongoose.model("Winner", WinnerSchema);
 
-// ROUTES
+// ROUTES //
 app.get("/restaurants", async (req, res) => {
   const list = await Restaurant.find();
   res.json(list);
@@ -62,5 +62,5 @@ app.delete("/restaurants/:id", async (req, res) => {
   }
 });
 
-// ✅ Export handler for Vercel
+// EXPORT FOR VERCEL, LISTEN FOR LOCAL //
 export default app;
