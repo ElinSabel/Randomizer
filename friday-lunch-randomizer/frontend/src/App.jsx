@@ -13,28 +13,30 @@ export default function Home() {
     fetchRestaurants();
   }, []);
 
+  const API_URL = "https://randomizer-backend-nine.vercel.app";
+
   const fetchRestaurants = async () => {
-    const res = await axios.get("http://localhost:4000/restaurants");
+  const res = await axios.get(`${API_URL}/restaurants`);
     setRestaurants(res.data);
   };
 
-  const addRestaurant = async () => {
-    if (!newName.trim()) return;
-    const res = await axios.post("http://localhost:4000/restaurants", { name: newName });
-    setRestaurants([...restaurants, res.data]);
-    setNewName("");
-  };
+const addRestaurant = async () => {
+  if (!newName.trim()) return;
+  const res = await axios.post(`${API_URL}/restaurants`, { name: newName });
+  setRestaurants([...restaurants, res.data]);
+  setNewName("");
+};
 
-  const deleteRestaurant = async (id) => {
-    await axios.delete(`http://localhost:4000/restaurants/${id}`);
-    setRestaurants(restaurants.filter(r => r._id !== id));
-  };
+const deleteRestaurant = async (id) => {
+  await axios.delete(`${API_URL}/restaurants/${id}`);
+  setRestaurants(restaurants.filter(r => r._id !== id));
+};
 
-  const resetAll = async () => {
-    await axios.delete("http://localhost:4000/restaurants");
-    setRestaurants([]);
-    setWinner(null);
-  };
+const resetAll = async () => {
+  await axios.delete(`${API_URL}/restaurants`);
+  setRestaurants([]);
+  setWinner(null);
+};;
 
   const spin = () => {
     if (!restaurants.length) return;
@@ -47,7 +49,7 @@ export default function Home() {
         colorIndex: randomIndex % 6 
       };
       setWinner(chosen);
-      axios.post("http://localhost:4000/winners", { name: chosen.name });
+      axios.post(`${API_URL}/winners`, { name: chosen.name });
       setLoading(false);
     }, 2000);
   };
