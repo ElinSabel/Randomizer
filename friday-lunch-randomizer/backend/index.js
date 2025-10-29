@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// CONNECT TO DB 
+// CONNECT TO DB
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("✅ Connected to MongoDB"))
   .catch(err => console.error("❌ MongoDB connection error:", err));
@@ -38,6 +38,11 @@ app.post("/restaurants", async (req, res) => {
   res.json(newR);
 });
 
+app.delete("/restaurants", async (req, res) => {
+  await Restaurant.deleteMany({});
+  res.json({ success: true });
+});
+
 app.get("/winners", async (req, res) => {
   const list = await Winner.find().sort({ date: -1 });
   res.json(list);
@@ -57,16 +62,5 @@ app.delete("/restaurants/:id", async (req, res) => {
   }
 });
 
-app.delete("/restaurants", async (req, res) => {
-  try {
-    await Restaurant.deleteMany({});
-    res.json({ success: true, message: "All restaurants deleted" });
-  } catch (err) {
-    res.status(500).json({ error: "Failed to delete all restaurants" });
-  }
-});
-
-app.listen(process.env.PORT, () =>
-  console.log(`🚀 Server running on http://localhost:${process.env.PORT}`)
-);
-
+// ✅ Export handler for Vercel
+export default app;
